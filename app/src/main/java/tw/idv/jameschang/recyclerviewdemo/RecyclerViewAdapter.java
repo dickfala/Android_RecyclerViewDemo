@@ -14,10 +14,11 @@ import java.util.ArrayList;
  * Created by cyy on 2017/12/5.
  */
 
-public class RecyclerViewAdapter  extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>{
+public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
     private static final String TAG = RecyclerViewAdapter.class.getSimpleName();
     ArrayList<UserModel> userListData;
+
     public RecyclerViewAdapter(ArrayList<UserModel> userData) {
 
         userListData = userData;
@@ -27,7 +28,7 @@ public class RecyclerViewAdapter  extends RecyclerView.Adapter<RecyclerViewAdapt
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.info_item,parent,false);
+                .inflate(R.layout.info_item, parent, false);
         ViewHolder holder = new ViewHolder(view);
         return holder;
     }
@@ -40,12 +41,8 @@ public class RecyclerViewAdapter  extends RecyclerView.Adapter<RecyclerViewAdapt
         int age = userListData.get(position).getAge();
         String sex = userListData.get(position).getSex();
 
-        UserModel userModel = new UserModel(account,sport,sex,age);
-
-        holder.account.setText(userModel.getAccount());
-        holder.sport.setText(userModel.getSport());
-        holder.sex.setText(userModel.getSex());
-        holder.age.setText(userModel.getAge()+"");
+        UserModel userModel = new UserModel(account, sport, sex, age);
+        holder.setModel(userModel);
     }
 
     @Override
@@ -54,7 +51,7 @@ public class RecyclerViewAdapter  extends RecyclerView.Adapter<RecyclerViewAdapt
         return userListData.size();
     }
 
-    public static  class ViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView account;
         private final TextView age;
@@ -67,6 +64,14 @@ public class RecyclerViewAdapter  extends RecyclerView.Adapter<RecyclerViewAdapt
             age = itemView.findViewById(R.id.age);
             sport = itemView.findViewById(R.id.sport);
             sex = itemView.findViewById(R.id.sex);
+        }
+
+        public void setModel(UserModel userModel) {
+
+            account.setText(userModel.getAccount());
+            sport.setText(userModel.getSport());
+            sex.setText(userModel.getSex());
+            age.setText(userModel.getAge() + "");
         }
     }
 }
