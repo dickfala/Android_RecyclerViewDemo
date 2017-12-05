@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -26,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String DATA_URL = "https://dickfala.github.io/test.html";
     private static final String TAG = MainActivity.class.getSimpleName();
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        recyclerView = findViewById(R.id.listView);
+
         OkHttpClient okHttpClient = new OkHttpClient();
 
         Request request = new Request.Builder()
@@ -57,9 +62,10 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                Log.d(TAG, "onResponse: " + response.body().string());
+//                Log.d(TAG, "onResponse: " + response.body().string());
                 String result = response.body().string();
                 parseJson(result);
+
             }
         });
     }
@@ -67,9 +73,23 @@ public class MainActivity extends AppCompatActivity {
     private void parseJson(String result) {
 
         Gson gson = new Gson();
-        ArrayList<UserModel> list = gson.fromJson(result,
-                new TypeToken<ArrayList<UserModel>>() {}.getType());
+        final ArrayList<UserModel> list = gson.fromJson(result,
+                new TypeToken<ArrayList<UserModel>>() {
+                }.getType());
         Log.d(TAG, "parseJson: list[1]:" + list.get(1).getAccount());
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                RecyclerViewAdapter adapter = new RecyclerViewAdapter(list);
+                recyclerView.setHasFixedSize(true);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                recyclerView.setAdapter(adapter);
+            }
+        });
+
+
     }
 
     @Override
