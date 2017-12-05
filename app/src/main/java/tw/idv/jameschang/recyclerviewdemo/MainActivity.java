@@ -10,7 +10,11 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import java.io.IOException;
+import java.util.ArrayList;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -53,13 +57,19 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                Log.d(TAG, "onResponse: " + response.body().string() );
+                Log.d(TAG, "onResponse: " + response.body().string());
+                String result = response.body().string();
+                parseJson(result);
             }
         });
     }
 
-    private void parseJson() {
+    private void parseJson(String result) {
 
+        Gson gson = new Gson();
+        ArrayList<UserModel> list = gson.fromJson(result,
+                new TypeToken<ArrayList<UserModel>>() {}.getType());
+        Log.d(TAG, "parseJson: list[1]:" + list.get(1).getAccount());
     }
 
     @Override
